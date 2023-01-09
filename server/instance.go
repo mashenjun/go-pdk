@@ -34,12 +34,24 @@ type (
 func getHandlers(config interface{}) map[string]func(*pdk.PDK) {
 	handlers := map[string]func(*pdk.PDK){}
 
-	if h, ok := config.(certificater); ok { handlers["certificate"] = h.Certificate }
-	if h, ok := config.(rewriter)    ; ok { handlers["rewrite"]     = h.Rewrite     }
-	if h, ok := config.(accesser)    ; ok { handlers["access"]      = h.Access      }
-	if h, ok := config.(responser)   ; ok { handlers["response"]    = h.Response    }
-	if h, ok := config.(prereader)   ; ok { handlers["preread"]     = h.Preread     }
-	if h, ok := config.(logger)      ; ok { handlers["log"]         = h.Log         }
+	if h, ok := config.(certificater); ok {
+		handlers["certificate"] = h.Certificate
+	}
+	if h, ok := config.(rewriter); ok {
+		handlers["rewrite"] = h.Rewrite
+	}
+	if h, ok := config.(accesser); ok {
+		handlers["access"] = h.Access
+	}
+	if h, ok := config.(responser); ok {
+		handlers["response"] = h.Response
+	}
+	if h, ok := config.(prereader); ok {
+		handlers["preread"] = h.Preread
+	}
+	if h, ok := config.(logger); ok {
+		handlers["log"] = h.Log
+	}
 
 	return handlers
 }
@@ -81,7 +93,7 @@ func (rh *rpcHandler) StartInstance(config PluginConfig, status *InstanceStatus)
 		handlers:  getHandlers(instanceConfig),
 	}
 
-// 	log.Printf("instance: %v", instance)
+	log.Printf("instance: %v", instance)
 
 	rh.addInstance(&instance)
 
@@ -92,7 +104,7 @@ func (rh *rpcHandler) StartInstance(config PluginConfig, status *InstanceStatus)
 		StartTime: instance.startTime.Unix(),
 	}
 
-// 	log.Printf("Started instance %#v:%v", config.Name, instance.id)
+	log.Printf("Started instance %#v:%v", config.Name, instance.id)
 
 	return nil
 }
@@ -171,6 +183,6 @@ func (rh *rpcHandler) expireInstances() {
 	rh.lock.Unlock()
 
 	for _, id := range oldinstances {
-		log.Printf("closed instance %d", id)
+		log.Printf("closed instance %d because expired", id)
 	}
 }
